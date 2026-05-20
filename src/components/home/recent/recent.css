@@ -1,3 +1,11 @@
+.recent .box {
+  overflow: hidden;
+  border-radius: 8px;
+}
+.recent .img img {
+  height: 220px;
+  object-fit: cover;
+}
 .recent .text {
   padding: 30px;
 }
@@ -18,4 +26,23 @@
 .recent .button {
   border-top: 1px solid #e4e8f3;
   padding: 10px 30px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.recent .button > div {
+  min-width: 0;
+}
+@media screen and (max-width: 520px) {
+  .recent .text,
+  .recent .button {
+    padding: 22px;
+  }
+  .recent .button {
+    align-items: flex-start;
+  }
+  .recent .btn2 {
+    width: auto;
+    font-size: 17px;
+    padding: 12px 20px;
+  }
 }

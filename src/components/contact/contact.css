@@ -1,5 +1,6 @@
 .contact form div {
   display: flex;
+  gap: 16px;
 }
 .contact textarea {
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -9,10 +10,12 @@
 }
 .contact input {
   margin-bottom: 20px;
-  margin-right: 10px;
+  margin-right: 0;
 }
 .contact form {
   padding: 30px;
+  background-color: #fff;
+  border-radius: 8px;
 }
 @media screen and (max-width: 768px) {
   .contact h4 {
@@ -24,5 +27,10 @@
   }
   .contact input {
     width: 100%;
+  }
+}
+@media screen and (max-width: 520px) {
+  .contact form {
+    padding: 22px;
   }
 }

@@ -29,8 +29,8 @@ async function main() {
     create: {
       email: "agent@rentup.com",
       passwordHash: agentPasswordHash,
-      firstName: "John",
-      lastName: "Doe",
+      firstName: "Mwape",
+      lastName: "Mumba",
       role: "AGENT",
       status: "ACTIVE",
     },

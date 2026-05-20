@@ -1,9 +1,13 @@
 .location .box {
   position: relative;
   border-radius: 5px;
+  overflow: hidden;
+  min-height: 250px;
 }
 .location img {
   border-radius: 5px;
+  height: 250px;
+  object-fit: cover;
 }
 .location .overlay {
   position: absolute;
@@ -13,7 +17,7 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  height: 250px;
+  height: 100%;
   width: 100%;
   color: #fff;
   z-index: 222;
@@ -21,13 +25,9 @@
 .location .overlay::after {
   content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 340px;
-  height: 210px;
+  inset: 20px;
   background: rgb(15 28 47 / 30%);
   z-index: -1;
-  margin: 20px;
   border-radius: 5px;
 }
 .location h5 {
@@ -38,10 +38,17 @@
   color: #fff;
   margin-right: 20px;
   opacity: 0.8;
+  display: inline-block;
 }
 @media screen and (max-width: 800px) {
-  .location .overlay::after {
-    width: 280px;
-    height: 170px;
+  .location .box,
+  .location img {
+    min-height: 220px;
+    height: 220px;
+  }
+}
+@media screen and (max-width: 520px) {
+  .location label {
+    margin: 4px 8px;
   }
 }

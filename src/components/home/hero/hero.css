@@ -3,34 +3,42 @@
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-  height: 90vh;
+  min-height: calc(100vh - 82px);
   width: 100%;
+  display: flex;
+  align-items: center;
 }
 .hero .container {
-  padding-top: 15%;
+  padding: 70px 0;
 }
 .hero h1 {
   color: #fff;
-  font-size: 60px;
+  font-size: clamp(38px, 7vw, 60px);
+  line-height: 1.25;
 }
 .hero p {
   color: #fff;
   opacity: 0.8;
 }
-form {
+.hero form {
   background-color: #fff;
   border-radius: 5px;
   margin-top: 50px;
   padding: 0 20px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(150px, 1fr)) auto 70px;
+  align-items: stretch;
+  box-shadow: 0 16px 45px rgb(0 22 84 / 10%);
 }
-form input {
+.hero form input {
   padding: 10px;
   width: 100%;
   border: 1px solid rgba(128, 128, 128, 0.2);
   margin-top: 5px;
   border-radius: 5px;
+  min-width: 0;
 }
-form span {
+.hero form span {
   font-size: 14px;
   color: grey;
 }
@@ -38,28 +46,85 @@ input::placeholder {
   font-size: 17px;
   color: black;
 }
-form .box {
+.hero form .box {
   padding: 15px;
   border-left: 1px solid rgba(128, 128, 128, 0.2);
+  min-width: 0;
 }
-form .box:nth-child(1) {
+.hero form .box:nth-child(1) {
   border-left: none;
 }
-form h4 {
+.hero form h4 {
   font-weight: 500;
+  margin: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.hero form button {
+  align-self: center;
+  justify-self: end;
+  width: 58px;
+  height: 48px;
+  padding: 0;
+}
+@media screen and (max-width: 1100px) {
+  .hero form {
+    grid-template-columns: repeat(2, minmax(180px, 1fr));
+    gap: 0;
+    padding: 16px;
+  }
+  .hero form .box {
+    border-left: none;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.16);
+  }
+  .hero form .box:nth-child(3),
+  .hero form .box:nth-child(4) {
+    border-bottom: none;
+  }
+  .hero form button {
+    grid-column: 1 / -1;
+    justify-self: stretch;
+    width: 100%;
+    margin-top: 12px;
+  }
 }
 @media screen and (max-width: 800px) {
+  .hero {
+    min-height: auto;
+  }
   .hero .container {
-    padding-top: 30%;
+    padding: 64px 0;
   }
-  form {
-    display: flex;
-    flex-wrap: wrap;
+  .hero form {
+    grid-template-columns: 1fr;
+    margin-top: 34px;
   }
-  form .box {
+  .hero form .box,
+  .hero form .box:nth-child(3) {
     border-left: none;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.16);
   }
-  form input {
-    width: 100%;
+  .hero form .box:nth-child(4) {
+    border-bottom: none;
+  }
+  .hero form h4 {
+    justify-content: flex-start;
+    padding: 4px 0;
+  }
+  .hero form button {
+    grid-column: auto;
+  }
+}
+@media screen and (max-width: 520px) {
+  .hero {
+    background-position: 62% center;
+  }
+  .hero .container {
+    padding: 52px 0;
+  }
+  .hero h1 {
+    font-size: 34px;
   }
 }

@@ -65,8 +65,18 @@
 }
 .team .button {
   margin-top: 20px;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 .team .button i {
   color: white;
   font-size: 20px;
+}
+@media screen and (max-width: 520px) {
+  .team .box {
+    padding: 1.5rem;
+  }
+  .team .button button {
+    flex: 1 1 120px;
+  }
 }
