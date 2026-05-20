@@ -1,0 +1,228 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// In SQLite, enums are not supported natively, so we'll use Strings 
+// and manage validation at the application level if needed.
+
+model User {
+  id               String      @id @default(uuid())
+  firstName        String?
+  lastName         String?
+  email            String      @unique
+  phone            String?
+  passwordHash     String
+  role             String      @default("CUSTOMER") // CUSTOMER, AGENT, ADMIN
+  status           String      @default("ACTIVE")   // ACTIVE, INACTIVE, SUSPENDED
+  emailVerifiedAt  DateTime?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  
+  refreshTokens    RefreshToken[]
+  properties       Property[]  @relation("CreatedBy")
+  assignedProperties Property[] @relation("AssignedAgent")
+  favorites        Favorite[]
+  blogPosts        BlogPost[]
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Property {
+  id               String         @id @default(uuid())
+  title            String
+  slug             String         @unique
+  description      String?
+  status           String         @default("DRAFT") // DRAFT, PUBLISHED, ARCHIVED
+  listingType      String         // FOR_RENT, FOR_SALE
+  propertyType     String
+  price            Float
+  currency         String         @default("K")
+  country          String
+  city             String
+  addressLine      String
+  latitude         Float?
+  longitude        Float?
+  bedrooms         Int?
+  bathrooms        Int?
+  areaValue        Float?
+  areaUnit         String?
+  featured         Boolean        @default(false)
+  publishedAt      DateTime?
+  
+  createdById      String
+  createdBy        User           @relation("CreatedBy", fields: [createdById], references: [id])
+  
+  assignedAgentId  String?
+  assignedAgent    User?          @relation("AssignedAgent", fields: [assignedAgentId], references: [id])
+  
+  images           PropertyImage[]
+  inquiries        Inquiry[]
+  tourRequests     TourRequest[]
+  favorites        Favorite[]
+  
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+}
+
+model PropertyImage {
+  id         String   @id @default(uuid())
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  fileUrl    String
+  altText    String?
+  sortOrder  Int      @default(0)
+  createdAt  DateTime @default(now())
+}
+
+model Inquiry {
+  id         String   @id @default(uuid())
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id])
+  userId     String?
+  fullName   String
+  email      String
+  phone      String?
+  message    String
+  source     String?
+  status     String   @default("NEW")
+  createdAt  DateTime @default(now())
+}
+
+model TourRequest {
+  id            String   @id @default(uuid())
+  propertyId    String
+  property      Property @relation(fields: [propertyId], references: [id])
+  userId        String?
+  preferredDate DateTime
+  preferredTime String
+  notes         String?
+  status        String   @default("PENDING")
+  createdAt     DateTime @default(now())
+}
+
+model Favorite {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id])
+  createdAt  DateTime @default(now())
+  
+  @@unique([userId, propertyId])
+}
+
+model BlogPost {
+  id            String    @id @default(uuid())
+  title         String
+  slug          String    @unique
+  excerpt       String?
+  body          String
+  coverImageUrl String?
+  status        String    @default("DRAFT")
+  publishedAt   DateTime?
+  authorId      String
+  author        User      @relation(fields: [authorId], references: [id])
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model PricingPlan {
+  id           String   @id @default(uuid())
+  name         String
+  price        Float
+  billingCycle String
+  featureList  String   // JSON string
+  highlighted  Boolean  @default(false)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model ContactRequest {
+  id        String   @id @default(uuid())
+  fullName  String
+  email     String
+  phone     String?
+  subject   String?
+  message   String
+  source    String?
+  status    String   @default("NEW")
+  createdAt DateTime @default(now())
+}
+
+model NewsletterSubscription {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  status    String   @default("SUBSCRIBED")
+  source    String?
+  createdAt DateTime @default(now())
+}
+
+model PushDevice {
+  id          String   @id @default(uuid())
+  userId      String?
+  platform    String
+  deviceToken String   @unique
+  appVersion  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Car {
+  id               String         @id @default(uuid())
+  make             String
+  model            String
+  year             Int
+  category         String         // ECONOMY, LUXURY, SUV, etc.
+  transmission     String         // MANUAL, AUTOMATIC
+  fuelType         String         // PETROL, DIESEL, ELECTRIC
+  seats            Int
+  pricePerDay      Float
+  currency         String         @default("K")
+  description      String?
+  status           String         @default("AVAILABLE") // AVAILABLE, RENTED, MAINTENANCE
+  featured         Boolean        @default(false)
+  
+  images           CarImage[]
+  bookings         CarBooking[]
+  
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+}
+
+model CarImage {
+  id        String   @id @default(uuid())
+  carId     String
+  car       Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  fileUrl   String
+  altText   String?
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model CarBooking {
+  id            String   @id @default(uuid())
+  carId         String
+  car           Car      @relation(fields: [carId], references: [id])
+  userId        String?
+  fullName      String
+  email         String
+  phone         String?
+  startDate     DateTime
+  endDate       DateTime
+  totalPrice    Float
+  status        String   @default("PENDING") // PENDING, CONFIRMED, CANCELLED, COMPLETED
+  createdAt     DateTime @default(now())
+}
